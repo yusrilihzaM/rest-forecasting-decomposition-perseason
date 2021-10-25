@@ -21,4 +21,11 @@ class User_model extends CI_model
         $this->db->insert('user', $data);
         return $this->db->affected_rows();
     } 
+
+    public function put_user($data, $id){
+
+        $this->db->update('user', $data, ['id_user'=>$id]);
+        return $this->db->affected_rows();
+    }
+
 }
