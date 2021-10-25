@@ -16,4 +16,9 @@ class User_model extends CI_model
         return $this->db->affected_rows();
         
     }
+
+    public function post_user($data){
+        $this->db->insert('user', $data);
+        return $this->db->affected_rows();
+    } 
 }

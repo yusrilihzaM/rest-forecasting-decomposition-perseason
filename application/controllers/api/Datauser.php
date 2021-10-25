@@ -66,4 +66,29 @@ class Datauser extends REST_Controller {
 
         
     }
+
+    public function index_post(){
+
+        $data = array(
+            'email'    => $this->post('email'),
+            'password'    =>$this->post('password')
+        );
+
+        if($this->User_model->post_user($data) > 0){
+            $this->response([
+                'status' => true,
+                'message'=>'Data user berhasil disimpan'
+            ], REST_Controller::HTTP_CREATED);
+        }{
+            // id tidak ada
+            $this->response([
+                'status' => false,
+                'message' => 'Gagal menyimpan data user baru'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+
+    }
+
+
+
 }
