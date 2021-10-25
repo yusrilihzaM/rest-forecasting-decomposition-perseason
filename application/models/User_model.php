@@ -9,5 +9,11 @@ class User_model extends CI_model
             return $this->db->get_where('user',['id_user'=>$id])->result_array();
         }
     }
+    public function delete_user($id){
 
+        $this->db->where('id_user', $id);
+        $this->db->delete('user');
+        return $this->db->affected_rows();
+        
+    }
 }
