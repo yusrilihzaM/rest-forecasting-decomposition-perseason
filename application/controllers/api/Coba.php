@@ -16,9 +16,8 @@ class Coba extends REST_Controller {
 
 
     public function index_get(){
-        // $this->db->empty_table('calculate_ctdma');
-        $user = $this->Ctdma_model->ctdma_year();
-        
+        $this->db->empty_table('calculate_ctdma');
+        $this->Ctdma_model->ctdma_quartal();
         // if($user){
         //     $this->response([
         //         'status' => true,
