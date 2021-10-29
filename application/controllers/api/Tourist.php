@@ -92,6 +92,27 @@ class Tourist extends REST_Controller {
         }
 
     }
+    public function index_post(){
+        $data = array(
+            'data_pengunjung'    => $this->post('data_pengunjung'),
+            'season'    => $this->post('season'),
+            'year'    => $this->post('year'),
+            'id_season_type'    => $this->post('id_season_type'),
+        );
 
+        if($this->Tourist_model->post_tourist($data) > 0){
+            $this->response([
+                'status' => true,
+                'message'=>'add new tourist successfully'
+            ], REST_Controller::HTTP_CREATED);
+        }{
+            // id tidak ada
+            $this->response([
+                'status' => false,
+                'message' => 'Failed to add new tourist'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+
+    }
 
 }
