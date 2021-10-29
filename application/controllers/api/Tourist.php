@@ -6,11 +6,11 @@ require APPPATH . 'libraries/REST_Controller.php';
 require APPPATH . 'libraries/Format.php';
 
 
-class Datauser extends REST_Controller {
+class Tourist extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('User_model');
+        $this->load->model('Tourist_model');
     }
 
 
@@ -19,21 +19,21 @@ class Datauser extends REST_Controller {
         $id=$this->get('id');
 
         if($id == null){
-            $user = $this->User_model->get_user();
+            $tourist = $this->Tourist_model->get_tourist();
         }else{
-            $user = $this->User_model->get_user($id);
+            $tourist = $this->Tourist_model->get_tourist($id);
         }
 
         
-        if($user){
+        if($tourist){
             $this->response([
                 'status' => true,
-                'data_user' => $user
+                'data_tourist' => $tourist
             ], REST_Controller::HTTP_OK);
         }else{
             $this->response([
                 'status' => false,
-                'message' => 'Data user tidak ada'
+                'message' => 'Data Toursit does not exist'
             ], REST_Controller::HTTP_NOT_FOUND);
         }
     }
@@ -45,21 +45,21 @@ class Datauser extends REST_Controller {
         if($id == null){
             $this->response([
                 'status' => false,
-                'message' => 'ID tidak boleh kosong'
+                'message' => 'ID cannot be empty'
             ], REST_Controller::HTTP_BAD_REQUEST);
         }else{
-            if($this->User_model->delete_user($id)>0){
+            if($this->Tourist_model->delete_tourist($id)>0){
                 // ok
                 $this->response([
                     'status' => true,
                     'id' => $id,
-                    'message'=>'terhapus'
+                    'message'=>'deleted'
                 ], REST_Controller::HTTP_OK);
             }{
                 // id tidak ada
                 $this->response([
                     'status' => false,
-                    'message' => 'ID tidak boleh kosong'
+                    'message' => 'ID cannot be empty'
                 ], REST_Controller::HTTP_BAD_REQUEST);
             }
         }
@@ -67,44 +67,27 @@ class Datauser extends REST_Controller {
         
     }
 
-    public function index_post(){
-
-        $data = array(
-            'email'    => $this->post('email'),
-            'password'    =>$this->post('password')
-        );
-
-        if($this->User_model->post_user($data) > 0){
-            $this->response([
-                'status' => true,
-                'message'=>'Data user berhasil disimpan'
-            ], REST_Controller::HTTP_CREATED);
-        }{
-            // id tidak ada
-            $this->response([
-                'status' => false,
-                'message' => 'Gagal menyimpan data user baru'
-            ], REST_Controller::HTTP_BAD_REQUEST);
-        }
-
-    }
     public function index_put(){
-        $id=$this->put('id');
+        $id=$this->put('id_data_pengunjung');
         $data = array(
-            'email'    => $this->put('email'),
-            'password'    =>$this->put('password')
+            'id_data_pengunjung'=> $this->put('id_data_pengunjung'),
+            'data_pengunjung'    => $this->put('data_pengunjung'),
+            'season'    => $this->put('season'),
+            'year'    => $this->put('year'),
+            'id_season_type'    => $this->put('id_season_type'),
+            't'    => $this->put('t'),
         );
 
-        if($this->User_model->put_user($data,$id) > 0){
+        if($this->Tourist_model->put_tourist($data,$id) > 0){
             $this->response([
                 'status' => true,
-                'message'=>'Data user berhasil di perbarui'
+                'message'=>'tourist updated successfully'
             ], REST_Controller::HTTP_CREATED);
         }{
             // id tidak ada
             $this->response([
                 'status' => false,
-                'message' => 'Gagal memperbarui data user'
+                'message' => 'Failed to update tourist'
             ], REST_Controller::HTTP_BAD_REQUEST);
         }
 
