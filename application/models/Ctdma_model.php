@@ -130,6 +130,23 @@ class Ctdma_model extends CI_model
                     "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
                     "ctdma"=>null
                 );
+
+                $data_aditif=array(
+                    "id_calculate_ratio"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "id_method_type"=>1,
+                    "ratio"=>null
+                );
+
+                $data_multiplikatif=array(
+                    "id_calculate_ratio"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "id_method_type"=>2,
+                    "ratio"=>null
+                );
+
+                $this->db->insert('calculate_ratio', $data_aditif);
+                $this->db->insert('calculate_ratio', $data_multiplikatif);
                 $this->db->insert('calculate_ctdma', $data);
             }else
             if($x>=$lower_limit){
@@ -139,7 +156,22 @@ class Ctdma_model extends CI_model
                     "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
                     "ctdma"=>null
                 );
+                $data_aditif=array(
+                    "id_calculate_ratio"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "id_method_type"=>1,
+                    "ratio"=>null
+                );
 
+                $data_multiplikatif=array(
+                    "id_calculate_ratio"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "id_method_type"=>2,
+                    "ratio"=>null
+                );
+
+                $this->db->insert('calculate_ratio', $data_aditif);
+                $this->db->insert('calculate_ratio', $data_multiplikatif);
                 $this->db->insert('calculate_ctdma', $data);
             }
             else
@@ -148,14 +180,36 @@ class Ctdma_model extends CI_model
                 +(int) $data_tourist[$x]['data_pengunjung']
                 +(int) $data_tourist[$x+$limit_season]['data_pengunjung']*0.5
                 )/$season;
-                $ratio=$data_tourist[$x]['data_pengunjung']-$ctdma;
                 // echo("$ctdma <br>");
                 $data=array(
                     "id_calculate_ctdma"=>null,
                     "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
                     "ctdma"=>$ctdma
                 );
+                $ratio_aditif=$data_tourist[$x]['data_pengunjung']-$ctdma;
+                $ratio_multiplikatif=$data_tourist[$x]['data_pengunjung']/$ctdma;
+                // echo("$ctdma <br>");
+                $data=array(
+                    "id_calculate_ctdma"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "ctdma"=>$ctdma
+                );
+                $data_aditif=array(
+                    "id_calculate_ratio"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "id_method_type"=>1,
+                    "ratio"=>$ratio_aditif
+                );
 
+                $data_multiplikatif=array(
+                    "id_calculate_ratio"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "id_method_type"=>2,
+                    "ratio"=>$ratio_multiplikatif
+                );
+
+                $this->db->insert('calculate_ratio', $data_aditif);
+                $this->db->insert('calculate_ratio', $data_multiplikatif);
                 $this->db->insert('calculate_ctdma', $data);
             }
         }
@@ -225,7 +279,30 @@ class Ctdma_model extends CI_model
                     "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
                     "ctdma"=>$ctdma
                 );
+                $ratio_aditif=$data_tourist[$x]['data_pengunjung']-$ctdma;
+                $ratio_multiplikatif=$data_tourist[$x]['data_pengunjung']/$ctdma;
+                // echo("$ctdma <br>");
+                $data=array(
+                    "id_calculate_ctdma"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "ctdma"=>$ctdma
+                );
+                $data_aditif=array(
+                    "id_calculate_ratio"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "id_method_type"=>1,
+                    "ratio"=>$ratio_aditif
+                );
 
+                $data_multiplikatif=array(
+                    "id_calculate_ratio"=>null,
+                    "id_data_pengunjung"=>$data_tourist[$x]['id_data_pengunjung'],
+                    "id_method_type"=>2,
+                    "ratio"=>$ratio_multiplikatif
+                );
+
+                $this->db->insert('calculate_ratio', $data_aditif);
+                $this->db->insert('calculate_ratio', $data_multiplikatif);
                 $this->db->insert('calculate_ctdma', $data);
             }
         }

@@ -16,9 +16,11 @@ class Calculate extends REST_Controller {
 	public function index_get()
 	{
         $this->db->empty_table('calculate_ctdma_ratio');
+        $year=$this->Ctdma_model->ctdma_year();
         $semester=$this->Ctdma_model->ctdma_semester();
+        $quartal=$this->Ctdma_model->ctdma_quartal();
 
-           if($semester){
+        if($year and $semester and $quartal){
             $this->response([
                 'status' => true,
                 'message' => "done"
