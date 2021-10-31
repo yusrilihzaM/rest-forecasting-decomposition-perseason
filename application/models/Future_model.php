@@ -1,6 +1,21 @@
 <?php
 class Future_model extends CI_model
 {
+
+    public function get_future_forecast(
+        $id_season_type = null,
+        $id_method_type = null
+        )
+    {
+        if ($id_season_type == null){
+            return $this->db->get('forecast_future')->result_array();
+        }else{
+            return $this->db->get_where('forecast_future',[
+                'id_season_type'=>$id_season_type,
+                'id_method_type'=>$id_method_type
+            ])->result_array();
+        }
+    }
     public function get_last_data(
         $id_season_type
     ){

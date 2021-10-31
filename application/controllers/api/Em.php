@@ -29,7 +29,7 @@ class Em extends REST_Controller {
         }else{
             $this->response([
                 'status' => false,
-                'message' => 'Data Toursit does not exist'
+                'message' => 'Data Error does not exist'
             ], REST_Controller::HTTP_NOT_FOUND);
         }
 

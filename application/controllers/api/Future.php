@@ -12,7 +12,27 @@ class Future extends REST_Controller {
         parent::__construct();
         $this->load->model('Future_model');
     }
+    public function index_get(){
+        $id_season_type = $this->get('id_season_type');
+        $id_method_type = $this->get('id_method_type');
+        if($id_season_type == null){
+            $future = $this->Future_model->get_future_forecast();
+        }else{
+            $future = $this->Future_model->get_future_forecast($id_season_type,$id_method_type);
+        }
+        if($future){
+            $this->response([
+                'status' => true,
+                'data_future' => $future
+            ], REST_Controller::HTTP_OK);
+        }else{
+            $this->response([
+                'status' => false,
+                'message' => 'Data Future does not exist'
+            ], REST_Controller::HTTP_NOT_FOUND);
+        }
 
+    }
     public function index_post(){
 
         $period= $this->post('period');
