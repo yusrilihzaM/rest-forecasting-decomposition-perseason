@@ -20,7 +20,8 @@ class Coba extends REST_Controller {
         // $this->db->empty_table('calculate_ratio');
         // $this->db->empty_table('seasonal_index');
         // $this->db->empty_table('calculate_smoothed');
-         $this->db->empty_table('coefficient_parameter');
+        //  $this->db->empty_table('coefficient_parameter');
+         $this->db->empty_table('calculate_forecasting');
         // $this->Ctdma_model->ctdma_year();
         // $this->Ctdma_model->ctdma_semester();
         // $this->Ctdma_model->ctdma_quartal();
@@ -29,7 +30,8 @@ class Coba extends REST_Controller {
         // $this->Calculate_model->quartal_season_index();
         // $coba=$this->Calculate_model->calculate_smoothed(1);
         // $coba=$this->Calculate_model->calculate_smoothed(2);
-        $coba=$this->Calculate_model->calculate_coefficient_parameter();
+        // $coba=$this->Calculate_model->calculate_coefficient_parameter();
+        $coba=$this->Calculate_model->calculate_forecast_year(1,1);
         var_dump($coba);
         // if($user){
         //     $this->response([

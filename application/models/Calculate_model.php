@@ -81,31 +81,7 @@ class Calculate_model extends CI_model
         return $data_si;
     }
 
-    public function insert_calculate_forecast(
-        $id_data_pengunjung,
-        $id_seasonal_index,
-        $smoothed,
-        $unadjusted,
-        $adjusted,
-        $ierrordMethodType,
-        $mad,
-        $mape,
-        $id_method_type
-    ){
-        $data=array(
-            "id_calculate_forecasting"=>null,
-            "id_data_pengunjung"=>$id_data_pengunjung,
-            "id_seasonal_index"=>$id_seasonal_index,
-            "smoothed"=>$smoothed,
-            "unadjusted"=>$unadjusted,
-            "adjusted"=>$adjusted,
-            "error"=>$ierrordMethodType,
-            "mad"=>$mad,
-            "mape"=>$mape,
-            "id_method_type"=>$id_method_type
-            );
-            $this->db->insert('calculate_forecasting', $data);
-    }
+   
 
     public function insert_smoothed(
         $id_data_pengunjung,
@@ -210,31 +186,119 @@ class Calculate_model extends CI_model
             $id_method_type=$method_type+1;
             $b=$this->calculate_parameter_b(2,$method_type+1);
             $a=$this->calculate_parameter_a(2,$method_type+1)-$b;
-            $this->insert_coefficient_parameter($a,$b,1,$id_method_type);
+            $this->insert_coefficient_parameter($a,$b,2,$id_method_type);
         }
 
         for ($method_type = 0; $method_type < 2; $method_type++){
             $id_method_type=$method_type+1;
             $b=$this->calculate_parameter_b(3,$method_type+1);
             $a=$this->calculate_parameter_a(3,$method_type+1)-$b;
-            $this->insert_coefficient_parameter($a,$b,1,$id_method_type);
+            $this->insert_coefficient_parameter($a,$b,3,$id_method_type);
         }
     }
-    public function calculate_forecast_year(){
-        $sql_data_tourist="SELECT * FROM data_pengunjung WHERE id_season_type=1";
+
+   
+    public function insert_calculate_forecast(
+        $id_data_pengunjung,
+        $unadjusted,
+        $adjusted,
+        $error,
+        $mad,
+        $mape,
+        $id_method_type
+    ){
+        $data=array(
+            "id_calculate_forecasting"=>null,
+            "id_data_pengunjung"=>$id_data_pengunjung,
+            "unadjusted"=>$unadjusted,
+            "adjusted"=>$adjusted,
+            "error"=>$error,
+            "mad"=>$mad,
+            "mape"=>$mape,
+            "id_method_type"=>$id_method_type
+            );
+            $this->db->insert('calculate_forecasting', $data);
+    }
+    public function get_coefisien_parameter(
+        $id_season_type,
+        $id_method_type
+    ){
+        $sql_c="SELECT * FROM coefficient_parameter WHERE id_season_type=$id_season_type AND id_method_type=$id_method_type";
+        $data=$this->db->query($sql_c)->row_array();
+        return $data;
+    }
+    public function get_data_all(
+        $id_season_type,
+        $id_method_type
+    ){
+        $sql_data_tourist="SELECT t,
+        id_data_pengunjung,
+        data_pengunjung,
+        season,
+        `year`,
+        ctdma,
+        ratio,
+        id_seasonal_index,
+        seasonal_index,
+        smoothed
+        FROM data_pengunjung
+        NATURAL JOIN calculate_ctdma
+        NATURAL JOIN calculate_ratio
+        NATURAL JOIN seasonal_index
+        NATURAL JOIN calculate_smoothed
+        WHERE 
+        id_season_type=$id_season_type
+        AND 
+        id_method_type=$id_method_type
+        ORDER BY t ASC";
         $data_tourist=$this->db->query($sql_data_tourist)->result_array();
+        return $data_tourist;
+    }
+    public function calculate_forecast_year(
+        $id_season_type,
+        $id_method_type
+    ){
+        $coefisien_parameter=$this->get_coefisien_parameter(
+            1,
+            $id_method_type
+        );
+
+        $a=(double)$coefisien_parameter['a'];
+        $b=(double)$coefisien_parameter['b'];
+        $data_tourist= $this->get_data_all($id_season_type,$id_method_type);
         foreach ($data_tourist as $data) {
             // echo($data['season']. "<br>");
-            $id_season_type=$data['id_season_type'];
+            $t=$data['t'];
             $season=$data['season'];
-            if ($data['season']==1) {
-                $season_index=(double) $this->get_season_index($id_season_type,1,$season) ["seasonal_index"];
-                $data_pengunjung=$data['data_pengunjung'];
+            $id_data_pengunjung=$data['id_data_pengunjung'];
+            $data_pengunjung=$data['data_pengunjung'];
+            $id_seasonal_index=$data['id_seasonal_index'];
+            $seasonal_index=$data['seasonal_index'];
+            $smoothed=$data['smoothed'];
+            $unadjusted=$a+$b*$t;
 
-                $id_data_pengunjung=$data['id_data_pengunjung'];
-                $id_season_index=(int) $this->get_season_index($id_season_type,1,$season) ["id_seasonal_index"];
-                $smoothed= $data_pengunjung-$season_index;
+            if( $id_method_type=1){
+                $adjusted=$seasonal_index+$unadjusted;
+            }else
+            if( $id_method_type=2){
+                $adjusted=$seasonal_index*$unadjusted;
             }
+            
+            $error=$data_pengunjung-$adjusted;
+            $mad=abs($error);
+            $mape=abs($error/$data_pengunjung);
+           
+            
+            $this-> insert_calculate_forecast(
+                $id_data_pengunjung,
+                $unadjusted,
+                $adjusted,
+                $error,
+                $mad,
+                $mape,
+                $id_method_type
+            );
+            
         }
     }
 }
