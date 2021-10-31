@@ -11,7 +11,7 @@ class Coba extends REST_Controller {
     {
         parent::__construct();
         $this->load->model('Calculate_model');
-        $this->load->model('Ctdma_model');
+        $this->load->model('Future_model');
     }
 
 
@@ -37,7 +37,8 @@ class Coba extends REST_Controller {
 
         // $this->Calculate_model->calculate_forecast_year(1,2);
         // $this->Calculate_model->calculate_forecast_year(2,2);
-        $coba=$this->Calculate_model->calculate_error_measurement(1,1);
+        $coba=$this->Future_model->future_quartal(12,3,2);
+        // $coba=$this->Future_model->get_coefisien_parameter(1,2);
         var_dump($coba);
         // if($user){
         //     $this->response([
